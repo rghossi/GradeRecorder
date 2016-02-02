@@ -1,0 +1,46 @@
+type Key extends String;
+type UserID extends String;
+type RoseUsername extends String {
+	validate() { this.length <= 8; }
+}
+type Grade extends Number;
+type MaxGrade extends Number {
+	validate() { this >= 0; }
+}
+
+type Owner {
+	username: UserID,
+	courses: Map<Key, Boolean>,
+}
+
+type Course {
+	name: String,
+	owners: Map<Key, Boolean>
+}
+
+type Assignment {
+	courseKey: Key,
+	maxGrade: MaxGrade, 
+	name: String
+}
+
+type Student {
+	courseKey: Key,
+	firstName: String,
+	lastName: String,
+	roseUserName: RoseUsername,
+	team: String | Null
+}
+
+path /assignments/{assignment} is Assignment;
+path /courses/{course} is Course;
+path /students/{student} is Student;
+path /owners/{owner} is Owner;
+
+path / {
+	read() { auth != null; }
+	write() { auth != null; }
+}
+
+
+
