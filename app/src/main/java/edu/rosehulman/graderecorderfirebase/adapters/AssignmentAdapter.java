@@ -19,6 +19,7 @@ import java.util.Collections;
 import edu.rosehulman.graderecorderfirebase.Constants;
 import edu.rosehulman.graderecorderfirebase.R;
 import edu.rosehulman.graderecorderfirebase.fragments.AssignmentListFragment;
+import edu.rosehulman.graderecorderfirebase.fragments.GradeEntryFragment;
 import edu.rosehulman.graderecorderfirebase.models.Assignment;
 import edu.rosehulman.graderecorderfirebase.utils.Utils;
 
@@ -49,7 +50,6 @@ public final class AssignmentAdapter extends RecyclerView.Adapter<AssignmentAdap
         String assignmentKey = assignmentRef.getKey();
         assignmentRef.setValue(assignment);
 
-        // TODO: Create grade entries also!
         Utils.createGradeEntriesForAssignment(mCourseKey, assignmentKey);
 
     }
@@ -86,6 +86,7 @@ public final class AssignmentAdapter extends RecyclerView.Adapter<AssignmentAdap
             assignment.setKey(dataSnapshot.getKey());
             mAssignments.add(assignment);
             Collections.sort(mAssignments);
+            notifyDataSetChanged();
         }
 
         private int remove(String key) {
@@ -111,7 +112,6 @@ public final class AssignmentAdapter extends RecyclerView.Adapter<AssignmentAdap
         public void onChildChanged(DataSnapshot dataSnapshot, String s) {
             remove(dataSnapshot.getKey());
             add(dataSnapshot);
-            notifyDataSetChanged();
         }
 
         @Override
@@ -145,7 +145,6 @@ public final class AssignmentAdapter extends RecyclerView.Adapter<AssignmentAdap
 
         @Override
         public void onClick(View v) {
-            // TODO: go to grade entry
             Assignment assignment = mAssignments.get(getAdapterPosition());
             mAssignmentSelectedListener.onAssignmentSelected(assignment);
         }

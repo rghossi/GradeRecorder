@@ -1,11 +1,14 @@
 package edu.rosehulman.graderecorderfirebase.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * Created by Matt Boutell on 10/16/2015.
  */
-public class Assignment implements Comparable<Assignment> {
+public class Assignment implements Comparable<Assignment>, Parcelable {
     public static final String COURSE_KEY = "courseKey";
 
     @JsonIgnore
@@ -25,6 +28,25 @@ public class Assignment implements Comparable<Assignment> {
         this.name = name;
         this.maxGrade = maxGrade;
     }
+
+    protected Assignment(Parcel in) {
+        key = in.readString();
+        courseKey = in.readString();
+        name = in.readString();
+        maxGrade = in.readDouble();
+    }
+
+    public static final Creator<Assignment> CREATOR = new Creator<Assignment>() {
+        @Override
+        public Assignment createFromParcel(Parcel in) {
+            return new Assignment(in);
+        }
+
+        @Override
+        public Assignment[] newArray(int size) {
+            return new Assignment[size];
+        }
+    };
 
     public String getKey() {
         return key;
@@ -68,4 +90,16 @@ public class Assignment implements Comparable<Assignment> {
         return name.compareTo(another.name);
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(key);
+        dest.writeString(courseKey);
+        dest.writeString(name);
+        dest.writeDouble(maxGrade);
+    }
 }

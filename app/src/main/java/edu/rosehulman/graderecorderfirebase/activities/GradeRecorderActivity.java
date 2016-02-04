@@ -19,6 +19,7 @@ import edu.rosehulman.graderecorderfirebase.Constants;
 import edu.rosehulman.graderecorderfirebase.R;
 import edu.rosehulman.graderecorderfirebase.fragments.AssignmentListFragment;
 import edu.rosehulman.graderecorderfirebase.fragments.CourseListFragment;
+import edu.rosehulman.graderecorderfirebase.fragments.GradeEntryFragment;
 import edu.rosehulman.graderecorderfirebase.fragments.LoginFragment;
 import edu.rosehulman.graderecorderfirebase.fragments.OwnerListFragment;
 import edu.rosehulman.graderecorderfirebase.fragments.StudentListFragment;
@@ -155,9 +156,10 @@ public class GradeRecorderActivity extends AppCompatActivity implements
 
     @Override
     public void onAssignmentSelected(Assignment assignment) {
-        // TODO: go to grade entry fragment
-
-
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.container, GradeEntryFragment.newInstance(assignment));
+        ft.addToBackStack("assignment_fragment");
+        ft.commit();
     }
 
     @Override

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 
+import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
@@ -13,7 +14,9 @@ import com.firebase.client.ValueEventListener;
 import edu.rosehulman.graderecorderfirebase.Constants;
 import edu.rosehulman.graderecorderfirebase.models.Assignment;
 import edu.rosehulman.graderecorderfirebase.models.Course;
+import edu.rosehulman.graderecorderfirebase.models.GradeEntry;
 import edu.rosehulman.graderecorderfirebase.models.Owner;
+import edu.rosehulman.graderecorderfirebase.models.Student;
 
 /**
  * Created by Matt Boutell on 10/2/2015. Utility class that handles bookkeeping and one-off
@@ -72,8 +75,38 @@ public class Utils {
 
 
     public static void createGradeEntriesForAssignment(String courseKey, final String assignmentKey) {
-        // TODO: Loop over students in this course, and when hear about one, create and push a GradeEntry for it.
-        // A childEventListener should work fine
+        Firebase ref = new Firebase(Constants.STUDENTS_PATH);
+        Query query = ref.orderByChild("courseKey").equalTo(courseKey);
+        query.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Firebase firebase = new Firebase(Constants.GRADE_ENTRIES_PATH);
+                GradeEntry gradeEntry = new GradeEntry();
+                gradeEntry.setAssignmentKey(assignmentKey);
+                gradeEntry.setStudentKey(dataSnapshot.getKey());
+                firebase.push().setValue(gradeEntry);
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
 
     }
 
